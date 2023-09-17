@@ -2,9 +2,27 @@ from django.shortcuts import render,redirect
 from django.views.generic import TemplateView
 from core.models import FileHandler
 from core.forms import FileHandlerForm
+from django.contrib.auth import authenticate,login,logout
+from django.shortcuts import render,HttpResponse,redirect
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
+def LoginPage(request):
+    if request.method=='POST':
+        username=request.POST.get('username')
+        pass1=request.POST.get('password')
+        user=authenticate(request,username=username,password=pass1)
+        if user is not None:
+            login(request,user)
+            return redirect('core:index')
+        else:
+            return HttpResponse ("Username or Password is incorrect!!!")
 
+    return render(request,'core/login.html')
 
+def LogoutPage(request):
+    logout(request)
+    return redirect('core:login')
 # Create your views here. Class base view(CBV)
 class IndexView(TemplateView):
     template_name = 'core/index.html'
@@ -32,4 +50,5 @@ class IndexView(TemplateView):
             context['form'] = form
         
         return redirect('core:index')
+    
     
