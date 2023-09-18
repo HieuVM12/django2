@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 def LoginPage(request):
     if request.method=='POST':
@@ -24,6 +25,7 @@ def LogoutPage(request):
     logout(request)
     return redirect('core:login')
 # Create your views here. Class base view(CBV)
+@method_decorator(login_required(login_url='core:login'), name='dispatch')
 class IndexView(TemplateView):
     template_name = 'core/index.html'
 
